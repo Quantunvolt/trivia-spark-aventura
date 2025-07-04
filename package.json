@@ -9,8 +9,7 @@
     "preview": "vite preview"
     "build:local": "vite build --base=./",      // 👈 Build para abrir con file:// (opcional)
   "preview:local": "vite preview --base=./",  // 👈 Preview local con rutas relativas (opcional)
-  "deploy": "npm run build && echo 'Build listo para subir a GitHub Pages.'"
-  },
+    },
   "dependencies": {
     "@google/genai": "^1.7.0",
     "@heroicons/react": "^2.2.0",
