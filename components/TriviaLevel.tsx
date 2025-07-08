@@ -28,13 +28,17 @@ const TriviaLevel: React.FC<TriviaLevelProps> = ({ level, onLevelComplete, onLev
       setLoading(true);
       setError(null);
       const fetchedQuestions = await generateTriviaQuestions(level.topic, level.questionCount);
+      if (!fetchedQuestions || fetchedQuestions.length === 0) {
+        throw new Error("No se devolvieron preguntas del servidor.");
+      }
       setQuestions(fetchedQuestions);
     } catch (err) {
-      setError("¡Ups! No se pudieron obtener las preguntas. Por favor, inténtalo de nuevo más tarde.");
+      console.error(err);
+      const errorMessage = err instanceof Error ? err.message : "¡Ups! No se pudieron obtener las preguntas. Por favor, inténtalo de nuevo más tarde.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level.topic, level.questionCount]);
 
   useEffect(() => {
@@ -119,7 +123,7 @@ const TriviaLevel: React.FC<TriviaLevelProps> = ({ level, onLevelComplete, onLev
     return <div className="w-full h-full flex flex-col justify-center items-center bg-red-900/50 font-body text-red-200 p-4 text-center">
         <p className="text-2xl font-bold mb-4">Ocurrió un Error</p>
         <p>{error}</p>
-        <button onClick={() => onLevelFail(0)} className="mt-6 bg-white text-red-200 font-bold py-2 px-6 rounded-full shadow-lg">Volver al Mapa</button>
+        <button onClick={() => onLevelFail(0)} className="mt-6 bg-white text-red-800 font-bold py-2 px-6 rounded-full shadow-lg">Volver al Mapa</button>
     </div>;
   }
   
@@ -175,32 +179,32 @@ const TriviaLevel: React.FC<TriviaLevelProps> = ({ level, onLevelComplete, onLev
             </button>
           </div>
 
-
-          {/* Options */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-            {currentQuestion.options.map(option => {
-              const isCorrect = option === currentQuestion.correctAnswer;
+          {/* Answer Options */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-8">
+            {currentQuestion.options.map((option, index) => {
               const isDisabled = disabledOptions.includes(option);
-              
-              let buttonClass = "bg-white text-slate-700 hover:bg-indigo-100";
-              if (isDisabled) {
-                  buttonClass = "bg-slate-300 text-slate-500 opacity-50 cursor-not-allowed";
-              } else if(isAnswered) {
-                  if (isCorrect) {
-                      buttonClass = "bg-green-500 text-white transform scale-105";
-                  } else if (selectedAnswer === option) {
-                      buttonClass = "bg-red-500 text-white";
-                  } else {
-                      buttonClass = "bg-white/50 text-slate-500 opacity-70";
-                  }
+              let buttonClasses = "font-bold text-slate-700 bg-white py-4 px-5 rounded-lg shadow-lg w-full text-left transition-all duration-300 transform hover:scale-105";
+
+              if (isAnswered) {
+                if (option === currentQuestion.correctAnswer) {
+                  buttonClasses += " bg-green-500 text-white scale-105";
+                } else if (option === selectedAnswer) {
+                  buttonClasses += " bg-red-500 text-white";
+                } else {
+                   buttonClasses += " opacity-60";
+                }
+              }
+
+              if(isDisabled) {
+                  buttonClasses += " opacity-50 cursor-not-allowed line-through";
               }
 
               return (
                 <button
-                  key={option}
+                  key={index}
                   onClick={() => handleAnswer(option)}
                   disabled={isAnswered || isDisabled}
-                  className={`p-4 rounded-xl text-lg font-body font-semibold shadow-lg transition-all duration-300 ${buttonClass}`}
+                  className={buttonClasses}
                 >
                   {option}
                 </button>

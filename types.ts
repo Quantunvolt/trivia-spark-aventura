@@ -57,3 +57,9 @@ export interface AvatarOption {
     name: string;
     component: React.ComponentType<{ className?: string }>;
 }
+
+export interface LocalProfile {
+  id: string;
+  name: string;
+  avatar: string;
+}

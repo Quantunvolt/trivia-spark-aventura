@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface LevelUpCelebrationProps {
   show: boolean;
@@ -13,14 +13,35 @@ const ConfettiPiece: React.FC<{ style: React.CSSProperties }> = ({ style }) => (
 );
 
 const LevelUpCelebration: React.FC<LevelUpCelebrationProps> = ({ show, levelInfo, onCelebrationEnd }) => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
   useEffect(() => {
+    // Initialize audio on component mount
+    if (!audioRef.current) {
+        audioRef.current = new Audio("https://raw.githubusercontent.com/Quantunvolt/trivia-spark-aventura/main/dist/assets/sounds/music_level_complete.mp3");
+        audioRef.current.preload = 'auto';
+    }
+
     if (show) {
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+          playPromise.catch(error => console.error("Audio playback failed:", error));
+      }
+      
       const timer = setTimeout(() => {
         onCelebrationEnd();
       }, 4000); // 4-second celebration
-      return () => clearTimeout(timer);
+
+      return () => {
+        clearTimeout(timer);
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+        }
+      };
     }
   }, [show, onCelebrationEnd]);
+
 
   if (!show || !levelInfo) {
     return null;

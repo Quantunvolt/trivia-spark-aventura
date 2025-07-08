@@ -4,23 +4,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "predeploy": "npm run build",
-  "deploy": "gh-pages -d dist"
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
-    "build:local": "vite build --base=./",      // 👈 Build para abrir con file:// (opcional)
-  "preview:local": "vite preview --base=./",  // 👈 Preview local con rutas relativas (opcional)
-    },
+  },
   "dependencies": {
-    "@google/genai": "^1.7.0",
-    "@heroicons/react": "^2.2.0",
+    "react-dom": "^19.1.0",
+    "@google/genai": "^1.8.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "firebase": "^11.10.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
-    "@vitejs/plugin-react": "^4.6.0",
     "typescript": "~5.7.2",
     "vite": "^6.2.0"
   }

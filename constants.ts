@@ -111,7 +111,7 @@ export const LEVEL_CONFIG: LevelConfig[] = [
 
 // Logros
 export const ACHIEVEMENTS: Achievement[] = [
-    { id: 'first_step', name: 'Primer Paso', description: 'Completa tu primer nivel.', icon: StarIcon,
+    { id: 'first_step', name: 'Primer Paso', description: 'Conquista tu primer planeta.', icon: StarIcon,
       check: (gs) => gs.completedLevels.length >= 1 },
     { id: 'level_5', name: 'Aprendiz', description: 'Alcanza el nivel de jugador 5.', icon: BrainIcon,
       check: (gs) => gs.playerLevel >= 5 },

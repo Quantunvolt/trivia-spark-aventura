@@ -143,12 +143,6 @@ const AnimatedCosmicBackground: React.FC = () => {
         <div className="relative w-full h-full bg-gradient-to-b from-blue-900 to-gray-900 overflow-hidden">
           <MovingStars />
           <ShootingStar />
-          <img 
-            src="https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80" 
-            alt="Fondo cósmico" 
-            className="absolute inset-0 w-full h-full object-cover opacity-20"
-            onError={(e) => { (e.target as HTMLImageElement).onerror = null; (e.target as HTMLImageElement).src='https://placehold.co/1200x800/020617/FFFFFF?text=Fondo'; }}
-          />
         </div>
     </div>
   );

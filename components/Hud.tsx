@@ -46,21 +46,29 @@ const Hud: React.FC<HudProps> = ({ lives, score, keys, gems, level, xp, xpForNex
       
       {/* Right side: Currencies & Actions */}
       <div className="flex items-start gap-2">
-         {/* Currencies */}
-        <div className="flex items-center bg-white/80 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-lg">
-           <div className="flex items-center gap-1 pr-2 border-r border-slate-300">
-             <HeartIcon className="w-6 h-6 text-red-500" />
-             <span className="font-bold text-lg text-slate-700">{lives}</span>
-           </div>
-           <div className="flex items-center gap-1 px-2 border-r border-slate-300">
-             <KeyIcon className="w-6 h-6 text-yellow-600" />
-             <span className="font-bold text-lg text-slate-700">{keys}</span>
-           </div>
-           <div className="flex items-center gap-1 pl-2">
-             <GemIcon className="w-6 h-6 text-cyan-500" />
-             <span className="font-bold text-lg text-slate-700">{gems}</span>
-           </div>
-         </div>
+        <div className="flex flex-col items-end gap-1">
+          {/* Currencies */}
+          <div className="flex items-center bg-white/80 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-lg">
+            <div className="flex items-center gap-1 pr-2 border-r border-slate-300">
+              <HeartIcon className="w-6 h-6 text-red-500" />
+              <span className="font-bold text-lg text-slate-700">{lives}</span>
+            </div>
+            <div className="flex items-center gap-1 px-2 border-r border-slate-300">
+              <KeyIcon className="w-6 h-6 text-yellow-600" />
+              <span className="font-bold text-lg text-slate-700">{keys}</span>
+            </div>
+            <div className="flex items-center gap-1 pl-2">
+              <GemIcon className="w-6 h-6 text-cyan-500" />
+              <span className="font-bold text-lg text-slate-700">{gems}</span>
+            </div>
+          </div>
+          {/* Timer */}
+          {lives < MAX_LIVES && rechargeTimer && (
+              <div className="text-xs font-mono font-bold text-white bg-black/50 rounded-md px-2 py-1">
+                  Próxima vida en: {rechargeTimer}
+              </div>
+          )}
+        </div>
 
          {/* Action Buttons */}
          <div className="flex flex-col gap-2">
@@ -75,13 +83,6 @@ const Hud: React.FC<HudProps> = ({ lives, score, keys, gems, level, xp, xpForNex
             </button>
          </div>
       </div>
-       {lives < MAX_LIVES && rechargeTimer && (
-          <div className="absolute top-full -right-2 mt-2 w-48 text-center sm:w-auto sm:right-auto sm:left-0 sm:top-auto sm:bottom-full sm:mb-2">
-              <div className="text-xs font-mono font-bold text-white bg-black/50 rounded-md px-2 py-1">
-                  Próxima vida en: {rechargeTimer}
-              </div>
-          </div>
-      )}
     </div>
   );
 };

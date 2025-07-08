@@ -21,7 +21,6 @@ const DynamicPath: React.FC<DynamicPathProps> = ({ levels, completedLevels }) =>
     >
       {levels.map(level => {
         const startPos = parsePosition(level.position);
-        // The path should be lit if the level it originates from is completed.
         const isStartNodeCompleted = completedLevels.some(cl => cl.levelId === level.id);
 
         return level.nextLevelIds.map(nextId => {
@@ -29,17 +28,44 @@ const DynamicPath: React.FC<DynamicPathProps> = ({ levels, completedLevels }) =>
           if (!nextLevel) return null;
 
           const endPos = parsePosition(nextLevel.position);
+          const isEndNodeCompleted = completedLevels.some(cl => cl.levelId === nextId);
 
           const controlX = (startPos.x + endPos.x) / 2 + (startPos.y - endPos.y) * 0.1;
           const controlY = (startPos.y + endPos.y) / 2 + (endPos.x - startPos.x) * 0.1;
 
-          const pathD = `M ${startPos.x}% ${startPos.y}% Q ${controlX}% ${controlY}% ${endPos.x}% ${endPos.y}%`;
+          const pathD = `M ${startPos.x} ${startPos.y} Q ${controlX} ${controlY} ${endPos.x} ${endPos.y}`;
+          
+          if (isStartNodeCompleted && isEndNodeCompleted) {
+            // --- "TRAVELED" PATH ---
+            // A solid, pulsing path for routes between two completed levels.
+            return (
+                <g key={`${level.id}-${nextId}-traveled`}>
+                    {/* 1. Base path (solid, vibrant color) */}
+                    <path
+                      d={pathD}
+                      stroke="#4f46e5" // indigo-600
+                      strokeWidth="8"
+                      fill="none"
+                      strokeLinecap="round"
+                    />
+                    {/* 2. Pulsing highlight on top */}
+                    <path
+                      d={pathD}
+                      stroke="#a5b4fc" // indigo-300
+                      strokeWidth="3"
+                      fill="none"
+                      strokeLinecap="round"
+                      className="animate-pulse-strong"
+                    />
+                </g>
+            );
+          }
           
           if (isStartNodeCompleted) {
-            // --- NEW, MORE ROBUST "PATH OF LIGHT" ---
-            // Uses multiple stacked strokes instead of a filter for better compatibility and visibility.
+            // --- "POTENTIAL" PATH (Path of Light) ---
+            // For paths leading from a completed level to an uncompleted one.
             return (
-              <g key={`${level.id}-${nextId}-completed`}>
+              <g key={`${level.id}-${nextId}-potential`}>
                 {/* 1. Outer glow layer (thick, semi-transparent) */}
                 <path
                   d={pathD}
@@ -69,9 +95,9 @@ const DynamicPath: React.FC<DynamicPathProps> = ({ levels, completedLevels }) =>
             );
           }
 
-          // --- NORMAL PATH (UNCHANGED) ---
+          // --- "LOCKED" PATH (Dashed) ---
           return (
-            <g key={`${level.id}-${nextId}-normal`}>
+            <g key={`${level.id}-${nextId}-locked`}>
               <path
                 d={pathD}
                 stroke="rgba(45, 27, 99, 0.6)"
